@@ -2,7 +2,7 @@ import {mario, peach, yoshi, bowser, luigi, donkey} from './jogadores.js'
 import { rollDice, corrida } from './funcoes.js'
 
 (async function main(){
-    corrida(mario, luigi)
+    corrida(mario, bowser)
 })()
 
 // Fazer isso de colocar parênteses na função e depois
