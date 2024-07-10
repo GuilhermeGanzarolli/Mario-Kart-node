@@ -25,12 +25,19 @@ export function tipoDePista(){
 }
 
 export function selecionarHabilidade(jogador,tipoPista) {
-    if(tipoPista==='RETA'){
-        return jogador.velocidade
-    }else if(tipoPista==='CURVA'){
-        return jogador.manobrabilidade
-    }else if(tipoPista==='CONFRONTO'){
-        return jogador.poder
+
+    switch (tipoPista) {
+        case 'RETA':
+            return jogador.velocidade
+
+        case 'CURVA':
+            return jogador.manobrabilidade
+
+        case 'CONFRONTO':
+            return jogador.poder
+    
+        default:
+            break;
     }
 }
 
