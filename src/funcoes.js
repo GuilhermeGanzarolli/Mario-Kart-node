@@ -1,29 +1,74 @@
 let rodadas = 0
 
-export async function rollDice(valor) {
+export function rollDice(valor) {
     const diceValue = Math.floor(Math.random() * valor) +1
     return diceValue
 }
 
-export async function tipoDePista(){
-    const valorPista = await rollDice(3)
+export function tipoDePista(){
+    const valorPista = rollDice(3)
 
-    if(valorPista===1){
-        return 'RETA'
-    }else if(valorPista===2){
-        return 'CURVA'
-    }else{
-        return 'CONFRONTO'
+    switch (valorPista) {
+        case 1:
+            return 'RETA'
+
+        case 2:
+            return 'CURVA'
+
+        case 3:
+            return 'CONFRONTO'
+    
+        default:
+            break;
     }
+
 }
 
-export async function selecionarHabilidade(jogador,tipoPista) {
+export function selecionarHabilidade(jogador,tipoPista) {
     if(tipoPista==='RETA'){
         return jogador.velocidade
     }else if(tipoPista==='CURVA'){
         return jogador.manobrabilidade
     }else if(tipoPista==='CONFRONTO'){
         return jogador.poder
+    }
+}
+
+export function ganhouRodada(jogador1, n1, jogador2, n2, pista){
+    if(pista=='CONFRONTO'){
+        if (n1>n2) {
+            console.log(`${jogador2.nome} perdeu -1 ponto!`)
+            jogador2.pontos-=1
+        } else if (n1<n2){
+            console.log(`${jogador1.nome}  perdeu -1 ponto!`)
+            jogador1.pontos-=1
+        }else{
+            console.log('Esta rodada deu empate!!!')
+        }
+    }else{
+        if (n1>n2) {
+            console.log(`${jogador1.nome} ganhou +1 ponto!`)
+            jogador1.pontos+=1
+        } else if (n1<n2){
+            console.log(`${jogador2.nome} ganhou! +1 ponto!`)
+            jogador2.pontos+=1
+        }else{
+            console.log('Esta rodada deu empate!!!')
+        }
+    }
+}
+
+export function ganhouPartida(Player1,Player2) {
+    if(Player1.pontos>Player2.pontos){
+
+        console.log(`✅🏁 ${Player1.nome.toUpperCase()} é o grande campeão da partida!! 🏁✅`)
+
+    } else if(Player1.pontos<Player2.pontos){
+
+        console.log(`✅🏁 ${Player2.nome.toUpperCase()} é o grande campeão da partida!! 🏁✅`)
+
+    } else{
+        console.log(`❌ Empate entre os dois competidores!! ❌`)
     }
 }
 
@@ -39,20 +84,13 @@ export async function corrida(participante1, participante2) {
         const resultadoF1 = resultado1+habilidade1
         const resultadoF2 = resultado2+habilidade2
         console.log(`
-         ========== Rodada ${rodadas+1} ==========
+         ========== 🚦 Rodada ${rodadas+1} 🚦 ==========
          Pista de -> ${pista}
-         Desempenho de ${participante1.nome} -> ${resultado1} + ${habilidade1} = ${resultado1+habilidade1}
-         Desempenho de ${participante2.nome} -> ${resultado2} + ${habilidade2} = ${resultado2+habilidade2}
+         Desempenho de ${participante1.nome} -> ${resultado1} + ${habilidade1} = ${resultadoF1}
+         Desempenho de ${participante2.nome} -> ${resultado2} + ${habilidade2} = ${resultadoF2}
         `)
-        if (resultadoF1>resultadoF2) {
-            console.log(`${participante1.nome} ganhou +1 ponto!`)
-            participante1.pontos +=1
-        } else if (resultadoF1<resultadoF2){
-            console.log(`${participante2.nome} ganhou! +1 ponto!`)
-            participante2.pontos +=1
-        }else{
-            console.log('Deu empate!!!')
-        }
+
+        await ganhouRodada(participante1,resultadoF1,participante2,resultadoF2,pista)
         rodadas++
     }
     console.log(`================================
@@ -60,14 +98,8 @@ export async function corrida(participante1, participante2) {
     ${participante1.nome}--> ${participante1.pontos}
     ${participante2.nome}--> ${participante2.pontos}
     `)
-    if (participante1.pontos>participante2.pontos){
-        console.log(participante1.nome + ' ganhou!')
-    }else if(participante1.pontos<participante2.pontos){
-        console.log(participante2.nome + ' ganhou!')
-    }else if(participante1.pontos==participante2.pontos){
-        console.log('Empate')
-    }else{
-        console.log('Erro!')
-    }
+    
+    await ganhouPartida(participante1,participante2)
+
     console.log('Programa Finalizado')
 }
